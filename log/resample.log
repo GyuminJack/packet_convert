@@ -1,0 +1,52 @@
+Tsv에 대한 전처리를 시작합니다.
+현재 작업 파일 리스트 : ['trace_2019-12-02_16:28:43_5tuple.tsv', 'trace_2019-12-02_16:28:41_5tuple.tsv', 'trace_2019-12-02_16:28:37_5tuple.tsv', 'trace_2019-12-02_16:28:36_5tuple.tsv']
+서브 프로세스 : /home/pi/packet_convert/convert_to_tsv/tsv_finish/trace_2019-12-02_16:28:43_5tuple.tsv
+서브 프로세스 : /home/pi/packet_convert/convert_to_tsv/tsv_finish/trace_2019-12-02_16:28:41_5tuple.tsv
+서브 프로세스 : /home/pi/packet_convert/convert_to_tsv/tsv_finish/trace_2019-12-02_16:28:37_5tuple.tsv
+서브 프로세스 : /home/pi/packet_convert/convert_to_tsv/tsv_finish/trace_2019-12-02_16:28:36_5tuple.tsv
+작업 완료 : /home/pi/packet_convert/convert_to_tsv/tsv_finish/trace_2019-12-02_16:28:37_5tuple.tsv
+작업 완료 : /home/pi/packet_convert/convert_to_tsv/tsv_finish/trace_2019-12-02_16:28:41_5tuple.tsv
+작업 완료 : /home/pi/packet_convert/convert_to_tsv/tsv_finish/trace_2019-12-02_16:28:36_5tuple.tsv
+작업 완료 : /home/pi/packet_convert/convert_to_tsv/tsv_finish/trace_2019-12-02_16:28:43_5tuple.tsv
+현재 작업 파일 리스트 : ['trace_2019-12-02_16:28:46_5tuple.tsv']
+서브 프로세스 : /home/pi/packet_convert/convert_to_tsv/tsv_finish/trace_2019-12-02_16:28:46_5tuple.tsv
+작업 완료 : /home/pi/packet_convert/convert_to_tsv/tsv_finish/trace_2019-12-02_16:28:46_5tuple.tsv
+현재 작업 파일 리스트 : ['trace_2019-12-02_16:28:53_5tuple.tsv', 'trace_2019-12-02_16:28:51_5tuple.tsv', 'trace_2019-12-02_16:28:48_5tuple.tsv']
+서브 프로세스 : /home/pi/packet_convert/convert_to_tsv/tsv_finish/trace_2019-12-02_16:28:53_5tuple.tsv
+서브 프로세스 : /home/pi/packet_convert/convert_to_tsv/tsv_finish/trace_2019-12-02_16:28:51_5tuple.tsv
+서브 프로세스 : /home/pi/packet_convert/convert_to_tsv/tsv_finish/trace_2019-12-02_16:28:48_5tuple.tsv
+작업 완료 : /home/pi/packet_convert/convert_to_tsv/tsv_finish/trace_2019-12-02_16:28:53_5tuple.tsv
+작업 완료 : /home/pi/packet_convert/convert_to_tsv/tsv_finish/trace_2019-12-02_16:28:51_5tuple.tsv
+작업 완료 : /home/pi/packet_convert/convert_to_tsv/tsv_finish/trace_2019-12-02_16:28:48_5tuple.tsv
+현재 작업 파일 리스트 : ['trace_2019-12-02_16:29:03_5tuple.tsv', 'trace_2019-12-02_16:29:02_5tuple.tsv', 'trace_2019-12-02_16:28:57_5tuple.tsv']
+서브 프로세스 : /home/pi/packet_convert/convert_to_tsv/tsv_finish/trace_2019-12-02_16:29:03_5tuple.tsv
+서브 프로세스 : /home/pi/packet_convert/convert_to_tsv/tsv_finish/trace_2019-12-02_16:29:02_5tuple.tsv
+서브 프로세스 : /home/pi/packet_convert/convert_to_tsv/tsv_finish/trace_2019-12-02_16:28:57_5tuple.tsv
+작업 완료 : /home/pi/packet_convert/convert_to_tsv/tsv_finish/trace_2019-12-02_16:28:57_5tuple.tsv
+작업 완료 : /home/pi/packet_convert/convert_to_tsv/tsv_finish/trace_2019-12-02_16:29:02_5tuple.tsv
+작업 완료 : /home/pi/packet_convert/convert_to_tsv/tsv_finish/trace_2019-12-02_16:29:03_5tuple.tsv
+현재 작업 파일 리스트 : ['trace_2019-12-02_16:28:58_5tuple.tsv']
+서브 프로세스 : /home/pi/packet_convert/convert_to_tsv/tsv_finish/trace_2019-12-02_16:28:58_5tuple.tsv
+작업 완료 : /home/pi/packet_convert/convert_to_tsv/tsv_finish/trace_2019-12-02_16:28:58_5tuple.tsv
+현재 작업 파일 리스트 : ['trace_2019-12-02_16:29:12_5tuple.tsv', 'trace_2019-12-02_16:29:09_5tuple.tsv', 'trace_2019-12-02_16:29:07_5tuple.tsv']
+서브 프로세스 : /home/pi/packet_convert/convert_to_tsv/tsv_finish/trace_2019-12-02_16:29:12_5tuple.tsv
+서브 프로세스 : /home/pi/packet_convert/convert_to_tsv/tsv_finish/trace_2019-12-02_16:29:09_5tuple.tsv
+서브 프로세스 : /home/pi/packet_convert/convert_to_tsv/tsv_finish/trace_2019-12-02_16:29:07_5tuple.tsv
+작업 완료 : /home/pi/packet_convert/convert_to_tsv/tsv_finish/trace_2019-12-02_16:29:07_5tuple.tsv
+작업 완료 : /home/pi/packet_convert/convert_to_tsv/tsv_finish/trace_2019-12-02_16:29:09_5tuple.tsv
+작업 완료 : /home/pi/packet_convert/convert_to_tsv/tsv_finish/trace_2019-12-02_16:29:12_5tuple.tsv
+현재 작업 파일 리스트 : ['trace_2019-12-02_16:29:14_5tuple.tsv']
+서브 프로세스 : /home/pi/packet_convert/convert_to_tsv/tsv_finish/trace_2019-12-02_16:29:14_5tuple.tsv
+작업 완료 : /home/pi/packet_convert/convert_to_tsv/tsv_finish/trace_2019-12-02_16:29:14_5tuple.tsv
+현재 작업 파일 리스트 : ['trace_2019-12-02_16:29:23_5tuple.tsv', 'trace_2019-12-02_16:29:19_5tuple.tsv', 'trace_2019-12-02_16:29:17_5tuple.tsv']
+서브 프로세스 : /home/pi/packet_convert/convert_to_tsv/tsv_finish/trace_2019-12-02_16:29:23_5tuple.tsv
+서브 프로세스 : /home/pi/packet_convert/convert_to_tsv/tsv_finish/trace_2019-12-02_16:29:19_5tuple.tsv
+서브 프로세스 : /home/pi/packet_convert/convert_to_tsv/tsv_finish/trace_2019-12-02_16:29:17_5tuple.tsv
+작업 완료 : /home/pi/packet_convert/convert_to_tsv/tsv_finish/trace_2019-12-02_16:29:17_5tuple.tsv
+작업 완료 : /home/pi/packet_convert/convert_to_tsv/tsv_finish/trace_2019-12-02_16:29:23_5tuple.tsv
+작업 완료 : /home/pi/packet_convert/convert_to_tsv/tsv_finish/trace_2019-12-02_16:29:19_5tuple.tsv
+현재 작업 파일 리스트 : ['trace_2019-12-02_16:29:24_5tuple.tsv']
+서브 프로세스 : /home/pi/packet_convert/convert_to_tsv/tsv_finish/trace_2019-12-02_16:29:24_5tuple.tsv
+작업 완료 : /home/pi/packet_convert/convert_to_tsv/tsv_finish/trace_2019-12-02_16:29:24_5tuple.tsv
+현재작업 이후 프로세스가 종료 됩니다.
+프로세스가 종료됩니다.
