@@ -18,7 +18,7 @@ def make_tsv(file_name, host_ip):
         mv_folder = '/home/pi/packet_convert/convert_to_tsv'
         move2 = subprocess.Popen("sudo mv {} {}/prepros_finish/{}/".format(outname,mv_folder,i), stdout=subprocess.PIPE,shell=True)
     move3 = subprocess.Popen("sudo mv {} {}/original/original_tsv/".format(file_name, mv_folder), stdout=subprocess.PIPE,shell=True)
-    print("작업 완료 : {}".format(file_name))
+    print("작업 완료 : {}".format(file_name),flush=True)
     return outname
     
 def preexec_function():
@@ -32,7 +32,7 @@ class GracefulKiller:
         signal.signal(signal.SIGINT, self.exit_gracefully)
         signal.signal(signal.SIGTERM, self.exit_gracefully)
     def exit_gracefully(self,signum, frame):
-        print("현재작업 이후 프로세스가 종료 됩니다.")
+        print("현재작업 이후 프로세스가 종료 됩니다.",flush=True)
         self.kill_now = True
 
 if __name__ == "__main__":
@@ -48,7 +48,7 @@ if __name__ == "__main__":
         else:
             os.mkdir("{}/convert_to_tsv/prepros_finish/{}".format(root_folder,i))
             os.mkdir("{}/convert_to_tsv/prepros_finish/{}/training_data".format(root_folder,i))
-    print("Tsv에 대한 전처리를 시작합니다.")
+    print("Tsv에 대한 전처리를 시작합니다.",flush=True)
     killer = GracefulKiller()
     while not killer.kill_now:
         time.sleep(0.2)
@@ -57,11 +57,11 @@ if __name__ == "__main__":
         except:
             file_list = last_file()
         if len(file_list)>0:
-            print("현재 작업 파일 리스트 : {}".format(file_list))
+            print("현재 작업 파일 리스트 : {}".format(file_list),flush=True)
             procs = []
             for i, _file in enumerate(file_list):
                 file_path = '/home/pi/packet_convert/convert_to_tsv/tsv_finish/'+_file
-                print("서브 프로세스 : {}".format(file_path))
+                print("서브 프로세스 : {}".format(file_path),flush=True)
                 proc = Process(target = make_tsv, args=(file_path,host_ips))
                 procs.append(proc)
                 proc.start()
