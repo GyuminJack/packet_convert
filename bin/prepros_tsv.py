@@ -10,21 +10,42 @@ def last_file():
         file_list_time = []
     return file_list_time
 
-def make_tsv(file_name, host_ip):
+def make_tsv(worker_id, file_name, host_ip, mac_dhcp_dict):
     program_path = "python3 /home/pi/packet_convert/src/tsv_preprocessing.py"
-    for i in host_ip:
-        cmd = "{} --file_name {} --host_ip {} --resampling_seconds 1 --multi multi".format(program_path,file_name, i)
-        outname = subprocess.Popen(cmd, stdout=subprocess.PIPE,shell=True).stdout.read().decode().replace("\n","")
-        mv_folder = '/home/pi/packet_convert/convert_to_tsv'
-        move2 = subprocess.Popen("sudo mv {} {}/prepros_finish/{}/".format(outname,mv_folder,i), stdout=subprocess.PIPE,shell=True)
-    move3 = subprocess.Popen("sudo mv {} {}/original/original_tsv/".format(file_name, mv_folder), stdout=subprocess.PIPE,shell=True)
-    print("작업 완료 : {}".format(file_name),flush=True)
-    return outname
     
-def preexec_function():
-    # Ignore the SIGINT signal by setting the handler to the standard
-    # signal handler SIG_IGN.
-    signal.signal(signal.SIGINT, signal.SIG_IGN)
+    for i in host_ip:
+        print("WORKER({}) : (START) IP : {} ".format(worker_id, i),flush=True)
+        try:
+            each_mac = mac_dhcp_dict[i]
+            cmd = "{} --file_name {} --host_ip {} --resampling_seconds 1 --multi multi".format(program_path,file_name, i)
+            outname = subprocess.Popen(cmd, stdout=subprocess.PIPE,shell=True).stdout.read().decode().replace("\n","")
+
+            if len(outname) > 5:
+                mv_folder = '/home/pi/packet_convert/convert_to_tsv'
+                rename = "{},{}".format(each_mac,",".join(outname.split("/")[-1].split(",")[1:]))
+                move2 = subprocess.Popen("sudo mv {} {}/prepros_finish/{}/{}".format(outname,mv_folder,each_mac, rename), stdout=subprocess.PIPE,shell=True)
+                print("WORKER({}) : (SAVED) MAC:{}, IP:{}, FILE:{} ".format(worker_id, i, each_mac,rename),flush=True)
+            else:
+                print("WORKER({}) : (NODATA) cmd : {}".format(worker_id, cmd)) 
+        except:
+            print("WORKER({}) : (ERROR) {}의 맥정보가 존재하지 않습니다.".format(worker_id,i))
+    move3 = subprocess.Popen("sudo mv {} {}/original/original_tsv/".format(file_name, mv_folder), stdout=subprocess.PIPE,shell=True)
+    print("WORKER({}) : (COMPLETE) {} ".format(worker_id, file_name),flush=True)
+    print("-"*20)
+    return outname
+
+def mac_dhcp_read():
+    mac_dhcp_string = subprocess.Popen("sudo cat /var/lib/misc/dnsmasq.leases",stdout=subprocess.PIPE, shell=True).stdout.read().decode()
+    mac_ip_dict = dict()
+    if len(mac_dhcp_string)>0:
+        mac_dhcp_list = mac_dhcp_string.split("\n")
+        for each_line in mac_dhcp_list:
+            each_line_list = each_line.split(" ")
+            if len(each_line_list) > 2:
+                mac_ip_dict[each_line_list[2]] = each_line_list[1]
+    
+    mac_ip_dict["192.168.203.229"] = "SMU_device"
+    return mac_ip_dict
 
 class GracefulKiller:
     kill_now = False
@@ -40,15 +61,21 @@ if __name__ == "__main__":
     parser.add_argument("--n_jobs", help="number of process",type=int, required=True)
     parser.add_argument("--host_ip", help="host ip path", type=str, required=True)
     args = parser.parse_args()
+    
+
+    mac_dhcp_dict = mac_dhcp_read()
     root_folder = '/home/pi/packet_convert'
     host_ips = subprocess.Popen("cat {}/bin/{}".format(root_folder,args.host_ip),stdout=subprocess.PIPE,shell=True).stdout.read().decode().split("\n")[:-1]
     for i in host_ips:
-        if os.path.isdir("{}/convert_to_tsv/prepros_finish/{}".format(root_folder,i)):
-            pass
-        else:
-            os.mkdir("{}/convert_to_tsv/prepros_finish/{}".format(root_folder,i))
-            os.mkdir("{}/convert_to_tsv/prepros_finish/{}/training_data".format(root_folder,i))
-    print("Tsv에 대한 전처리를 시작합니다.",flush=True)
+        try: 
+            if os.path.isdir("{}/convert_to_tsv/prepros_finish/{}".format(root_folder,mac_dhcp_dict[i])):
+                pass
+            else:
+                os.mkdir("{}/convert_to_tsv/prepros_finish/{}".format(root_folder,mac_dhcp_dict[i]))
+        except:
+            host_ips.remove(i)
+            print("{}에 대한 mac정보가 존재하지 않아 Resampling에서 제외됩니다.".format(i))
+
     killer = GracefulKiller()
     while not killer.kill_now:
         time.sleep(0.2)
@@ -61,8 +88,8 @@ if __name__ == "__main__":
             procs = []
             for i, _file in enumerate(file_list):
                 file_path = '/home/pi/packet_convert/convert_to_tsv/tsv_finish/'+_file
-                print("서브 프로세스 : {}".format(file_path),flush=True)
-                proc = Process(target = make_tsv, args=(file_path,host_ips))
+                print("WORKER({}) : {}".format(i, _file),flush=True)
+                proc = Process(target = make_tsv, args=(i, file_path, host_ips, mac_dhcp_dict))
                 procs.append(proc)
                 proc.start()
             for proc in procs:
