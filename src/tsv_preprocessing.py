@@ -25,7 +25,6 @@ def extract_first_end_time(file_name, gap):
       
 
 def date_for_find(time, gap):
-    first_time = time
     tmp_time = time
     last_time = time + timedelta(seconds = gap)
     time_list = []
@@ -46,13 +45,13 @@ def extract_one_second_statistics(sub_tmp, host_ip,  wht_ip, blk_ip, wn_port, wn
         else:
             flag = 0
         return flag
-    
-    
+
     def ip_check(contents, check_list):
         if contents in check_list:
             return 1
         else:
             return 0 
+
     def protocol_counter(protocol_list, wn_protocol):
         protocol_counter = Counter(protocol_list)
         return_list = []
@@ -64,6 +63,7 @@ def extract_one_second_statistics(sub_tmp, host_ip,  wht_ip, blk_ip, wn_port, wn
     tmp_stats = []
     column_name = ['time','protocol','src_ip','dst_ip','src_port','dst_port','length']
     tmp_df = pd.DataFrame(sub_tmp, columns=column_name)
+    
     tmp_df['direction_flag'] = tmp_df['src_ip'].apply(lambda x: mk_d_flag(x, host_ip))
 
     tmp_df['wht_src_ip'] = tmp_df['src_ip'].apply(lambda x : ip_check(x, wht_ip))
@@ -92,7 +92,6 @@ def extract_one_second_statistics(sub_tmp, host_ip,  wht_ip, blk_ip, wn_port, wn
 
 
 def single_main(file_name, start_time,total_trial, gap, wht_ip, blk_ip, wn_port, wn_protocol):
-    t1 = time.time()
     total_list = []
     for i in range(total_trial):
         t2 = time.time()
@@ -109,8 +108,6 @@ def single_main(file_name, start_time,total_trial, gap, wht_ip, blk_ip, wn_port,
         stats_tmp = extract_one_second_statistics(sub_tmp_list, host_ip,wht_ip, blk_ip, wn_port, wn_protocol)
         total_list.append([grep_date[0]]+stats_tmp)
     return total_list
-
-
 
 def list_split(int_trial, split):
     l = range(int_trial)
@@ -131,10 +128,8 @@ def multi_main(file_name,start_time, total_trial_list, gap, wht_ip, blk_ip, wn_p
             except:
                 pass
         stats_tmp = extract_one_second_statistics(sub_tmp_list, host_ip, wht_ip, blk_ip, wn_port, wn_protocol)
-         #         total_list.append([grep_date[0]]+stats_tmp)
         L.append([i,grep_date[0]]+stats_tmp)
     return total_list
-
 
 def write_file(protocol_list,result,output_name, multi=False):
     print(output_name)

@@ -14,6 +14,7 @@ def make_tsv(worker_id, file_name, host_ip, mac_dhcp_dict):
     program_path = "python3 /home/pi/packet_convert/src/tsv_preprocessing.py"
     
     for i in host_ip:
+        st_time = time.time()
         print("WORKER({}) : (START) IP : {} ".format(worker_id, i),flush=True)
         try:
             each_mac = mac_dhcp_dict[i]
@@ -24,7 +25,7 @@ def make_tsv(worker_id, file_name, host_ip, mac_dhcp_dict):
                 mv_folder = '/home/pi/packet_convert/convert_to_tsv'
                 rename = "{},{}".format(each_mac,",".join(outname.split("/")[-1].split(",")[1:]))
                 move2 = subprocess.Popen("sudo mv {} {}/prepros_finish/{}/{}".format(outname,mv_folder,each_mac, rename), stdout=subprocess.PIPE,shell=True)
-                print("WORKER({}) : (SAVED) MAC:{}, IP:{}, FILE:{} ".format(worker_id, i, each_mac,rename),flush=True)
+                print("WORKER({}) : (SAVED) MAC:{}, IP:{}, FILE:{}, Time:{:.3f}s ".format(worker_id, i, each_mac, rename, time.time()-st_time),flush=True)
             else:
                 print("WORKER({}) : (NODATA) cmd : {}".format(worker_id, cmd)) 
         except:
@@ -43,7 +44,6 @@ def mac_dhcp_read():
             each_line_list = each_line.split(" ")
             if len(each_line_list) > 2:
                 mac_ip_dict[each_line_list[2]] = each_line_list[1]
-    
     mac_ip_dict["192.168.203.229"] = "SMU_device"
     return mac_ip_dict
 
@@ -64,17 +64,19 @@ if __name__ == "__main__":
     
 
     mac_dhcp_dict = mac_dhcp_read()
+    print("인식된 맥 주소 : ",mac_dhcp_dict)
     root_folder = '/home/pi/packet_convert'
     host_ips = subprocess.Popen("cat {}/bin/{}".format(root_folder,args.host_ip),stdout=subprocess.PIPE,shell=True).stdout.read().decode().split("\n")[:-1]
     for i in host_ips:
         try: 
-            if os.path.isdir("{}/convert_to_tsv/prepros_finish/{}".format(root_folder,mac_dhcp_dict[i])):
+            mac_name = mac_dhcp_dict[i]
+            if os.path.isdir("{}/convert_to_tsv/prepros_finish/{}".format(root_folder,mac_name)):
                 pass
             else:
-                os.mkdir("{}/convert_to_tsv/prepros_finish/{}".format(root_folder,mac_dhcp_dict[i]))
+                os.mkdir("{}/convert_to_tsv/prepros_finish/{}".format(root_folder,mac_name))
         except:
             host_ips.remove(i)
-            print("{}에 대한 mac정보가 존재하지 않아 Resampling에서 제외됩니다.".format(i))
+            print("IP({})에 대한 mac정보가 존재하지 않아 Resampling에서 제외됩니다.".format(i))
 
     killer = GracefulKiller()
     while not killer.kill_now:
