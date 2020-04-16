@@ -1,16 +1,17 @@
 import signal
-signal.signal(signal.SIGINT, signal.SIG_IGN) 
+import traceback
+import math
+import argparse
 import time
 import subprocess
 import sys
 import os
+import pandas as pd
 from dateutil.parser import parse
 from datetime import timedelta, datetime
-import pandas as pd
-import traceback
-import math, argparse
 from multiprocessing import Process, Manager
 from collections import Counter
+signal.signal(signal.SIGINT, signal.SIG_IGN)
 
 def extract_first_end_time(file_name, gap):
     first_time =  subprocess.Popen("head -2 {}".format(file_name), stdout=subprocess.PIPE,shell=True).stdout.read().decode().split("\n")[1].split("\t")[0]

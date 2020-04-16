@@ -5,6 +5,7 @@ import datetime
 import time
 import os
 import signal
+import yaml
 
 def last_file():
     file_list_time = subprocess.Popen("ls /home/pi/packet_convert/convert_to_tsv/tsv_finish -r",stdout=subprocess.PIPE , shell=True).stdout.read()
@@ -63,6 +64,27 @@ class GracefulKiller:
         print("현재작업 이후 프로세스가 종료 됩니다.",flush=True)
         self.kill_now = True
 
+def add_path_rm_hosts(host_ips):
+    global mac_dhcp_dict
+    root_folder = '/home/pi/packet_convert'
+    date_path = datetime.datetime.now().strftime("%Y-%m-%d")
+    for i in host_ips:
+        try: 
+            mac_name = mac_dhcp_dict[i]
+            create_path = os.path.join(root_folder, "convert_to_tsv", "prepros_finish", mac_name, date_path)
+            if not os.path.isdir(create_path):
+                os.makedirs(create_path)
+        except:
+            host_ips.remove(i)
+            print("IP({})에 대한 mac정보가 존재하지 않아 Resampling에서 제외됩니다.".format(i))
+    return host_ips
+
+def read_host_ips(host_ip_path):
+    with open(host_ip_path, "r") as f:
+        host_ips = yaml.load(f, Loader = yaml.FullLoader)
+    return host_ips
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--n_jobs", help="number of process",type=int, required=True)
@@ -72,20 +94,8 @@ if __name__ == "__main__":
     
     mac_dhcp_dict = mac_dhcp_read()
     print("인식된 맥 주소 : ",mac_dhcp_dict)
-    root_folder = '/home/pi/packet_convert'
-    date_path = datetime.datetime.now().strftime("%Y-%m-%d")
-    host_ips = subprocess.Popen("cat {}/bin/{}".format(root_folder,args.host_ip),stdout=subprocess.PIPE,shell=True).stdout.read().decode().split("\n")[:-1]
-    for i in host_ips:
-        try: 
-            mac_name = mac_dhcp_dict[i]
-            create_path = os.path.join(root_folder, "convert_to_tsv", "prepros_finish", mac_name, date_path)
-            if os.path.isdir(create_path):
-                pass
-            else:
-                os.makedirs(create_path)
-        except:
-            host_ips.remove(i)
-            print("IP({})에 대한 mac정보가 존재하지 않아 Resampling에서 제외됩니다.".format(i))
+    host_ips = read_host_ips(args.host_ip)
+    host_ips = add_path_rm_hosts(host_ips)
 
     killer = GracefulKiller()
     while not killer.kill_now:

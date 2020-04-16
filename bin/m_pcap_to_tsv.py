@@ -26,7 +26,6 @@ def make_tsv(file_name):
     
     return status
 
-
 class GracefulKiller:
     kill_now = False
     def __init__(self):
