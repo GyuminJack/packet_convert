@@ -94,7 +94,7 @@ if __name__ == "__main__":
     
     mac_dhcp_dict = mac_dhcp_read()
     print("인식된 맥 주소 : ",mac_dhcp_dict)
-    host_ips = read_host_ips(args.host_ip)
+    host_ips = read_host_ips(args.host_ip)['host_ips']
     host_ips = add_path_rm_hosts(host_ips)
 
     killer = GracefulKiller()
