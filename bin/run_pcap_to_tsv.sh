@@ -1,1 +1,1 @@
-python3 bin/convert.py --n_jobs 4
+python3 bin/m_pcap_to_tsv.py --n_jobs 4

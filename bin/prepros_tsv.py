@@ -1,101 +1,194 @@
+import signal
+signal.signal(signal.SIGINT, signal.SIG_IGN) 
+import time
 import subprocess
-import argparse
-from multiprocessing import Process
-import time,os,signal
-def last_file():
-    file_list_time = subprocess.Popen("ls /home/pi/packet_convert/convert_to_tsv/tsv_finish -r",stdout=subprocess.PIPE , shell=True).stdout.read()
-    if len(file_list_time.decode())>1:
-        file_list_time = file_list_time.decode().split("\n")[:-1]
-    else:
-        file_list_time = []
-    return file_list_time
+import sys
+import os
+from dateutil.parser import parse
+from datetime import timedelta, datetime
+import pandas as pd
+import traceback
+import math, argparse
+from multiprocessing import Process, Manager
+from collections import Counter
 
-def make_tsv(worker_id, file_name, host_ip, mac_dhcp_dict):
-    program_path = "python3 /home/pi/packet_convert/src/tsv_preprocessing.py"
+def extract_first_end_time(file_name, gap):
+    first_time =  subprocess.Popen("head -2 {}".format(file_name), stdout=subprocess.PIPE,shell=True).stdout.read().decode().split("\n")[1].split("\t")[0]
+    end_time = subprocess.Popen("tail -1 {}".format(file_name), stdout=subprocess.PIPE,shell=True).stdout.read().decode().replace("\n","").split("\t")[0]
     
-    for i in host_ip:
-        st_time = time.time()
-        print("WORKER({}) : (START) IP : {} ".format(worker_id, i),flush=True)
-        try:
-            each_mac = mac_dhcp_dict[i]
-            cmd = "{} --file_name {} --host_ip {} --resampling_seconds 1 --multi multi".format(program_path,file_name, i)
-            outname = subprocess.Popen(cmd, stdout=subprocess.PIPE,shell=True).stdout.read().decode().replace("\n","")
+    try:
+        total_seconds = (parse(end_time)-parse(first_time)).total_seconds()
+        total_trial = int(total_seconds / gap)+1
+        first_time = datetime.strptime(first_time, "%m,%d,%H:%M:%S.%f")
+        end_time = datetime.strptime(end_time, "%m,%d,%H:%M:%S.%f")
+        return first_time, end_time, total_trial
 
-            if len(outname) > 5:
-                mv_folder = '/home/pi/packet_convert/convert_to_tsv'
-                rename = "{},{}".format(each_mac,",".join(outname.split("/")[-1].split(",")[1:]))
-                move2 = subprocess.Popen("sudo mv {} {}/prepros_finish/{}/{}".format(outname,mv_folder,each_mac, rename), stdout=subprocess.PIPE,shell=True)
-                print("WORKER({}) : (SAVED) MAC:{}, IP:{}, FILE:{}, Time:{:.3f}s ".format(worker_id, i, each_mac, rename, time.time()-st_time),flush=True)
-            else:
-                print("WORKER({}) : (NODATA) cmd : {}".format(worker_id, cmd)) 
-        except:
-            print("WORKER({}) : (ERROR) {}의 맥정보가 존재하지 않습니다.".format(worker_id,i))
-    move3 = subprocess.Popen("sudo mv {} {}/original/original_tsv/".format(file_name, mv_folder), stdout=subprocess.PIPE,shell=True)
-    print("WORKER({}) : (COMPLETE) {} ".format(worker_id, file_name),flush=True)
-    print("-"*20)
-    return outname
+    except:
+        subprocess.Popen("sudo mv {} /home/pi/packet_convert/convert_to_tsv/etc/nothing_in_tsv/".format(file_name),shell=True)
+      
 
-def mac_dhcp_read():
-    mac_dhcp_string = subprocess.Popen("sudo cat /var/lib/misc/dnsmasq.leases",stdout=subprocess.PIPE, shell=True).stdout.read().decode()
-    mac_ip_dict = dict()
-    if len(mac_dhcp_string)>0:
-        mac_dhcp_list = mac_dhcp_string.split("\n")
-        for each_line in mac_dhcp_list:
-            each_line_list = each_line.split(" ")
-            if len(each_line_list) > 2:
-                mac_ip_dict[each_line_list[2]] = each_line_list[1]
-    mac_ip_dict["192.168.203.229"] = "SMU_device"
-    return mac_ip_dict
+def date_for_find(time, gap):
+    tmp_time = time
+    last_time = time + timedelta(seconds = gap)
+    time_list = []
+    while tmp_time < last_time :
+        day_str = ",".join([str(tmp_time.month).zfill(2),str(tmp_time.day).zfill(2)])
+        time_str = ":".join([str(tmp_time.hour).zfill(2),str(tmp_time.minute).zfill(2),str(tmp_time.second).zfill(2)])
+        full_str = ",".join([day_str,time_str])
+        tmp_time = tmp_time + timedelta(seconds=1)
+        time_list.append(full_str)
+    return time_list
 
-class GracefulKiller:
-    kill_now = False
-    def __init__(self):
-        signal.signal(signal.SIGINT, self.exit_gracefully)
-        signal.signal(signal.SIGTERM, self.exit_gracefully)
-    def exit_gracefully(self,signum, frame):
-        print("현재작업 이후 프로세스가 종료 됩니다.",flush=True)
-        self.kill_now = True
+def extract_one_second_statistics(sub_tmp, host_ip,  wht_ip, blk_ip, wn_port, wn_protocol):
+    def mk_d_flag(ip, host_ip):
+        if ip == host_ip :
+            flag = 1
+        elif len(ip) > 15:
+            flag = -1
+        else:
+            flag = 0
+        return flag
+
+    def ip_check(contents, check_list):
+        if contents in check_list:
+            return 1
+        else:
+            return 0 
+
+    def protocol_counter(protocol_list, wn_protocol):
+        protocol_counter = Counter(protocol_list)
+        return_list = []
+        for i in wn_protocol:
+            return_list.append(protocol_counter[i])
+        return_list.append(sum(protocol_counter.values())-sum(return_list))
+        return return_list
+    
+    tmp_stats = []
+    column_name = ['time','protocol','src_ip','dst_ip','src_port','dst_port','length']
+    tmp_df = pd.DataFrame(sub_tmp, columns=column_name)
+    
+    tmp_df['direction_flag'] = tmp_df['src_ip'].apply(lambda x: mk_d_flag(x, host_ip))
+
+    tmp_df['wht_src_ip'] = tmp_df['src_ip'].apply(lambda x : ip_check(x, wht_ip))
+    tmp_df['blk_src_ip'] = tmp_df['src_ip'].apply(lambda x : ip_check(x, blk_ip))
+    tmp_df['wht_dst_ip'] = tmp_df['dst_ip'].apply(lambda x : ip_check(x, wht_ip))
+    tmp_df['blk_dst_ip'] = tmp_df['dst_ip'].apply(lambda x : ip_check(x, blk_ip))
+    counter_ip = list(tmp_df[['wht_src_ip','blk_src_ip','wht_dst_ip','blk_dst_ip']].apply(sum, axis=0))
+                        
+    protocol_count = protocol_counter(tmp_df['protocol'],wn_protocol)
+    for i, item in enumerate(counter_ip):
+        if math.isnan(item) == True:
+            counter_ip[i]=0
+
+    for i in [1,0,-1]:
+        sub_df = tmp_df[tmp_df['direction_flag'] == i]['length'].apply(int)
+        if len(sub_df)>0:
+            one_sec_count = len(sub_df)
+            one_sec_max_min = max(sub_df)-min(sub_df)
+            one_sec_sum = sum(sub_df)
+            tmp_stats += [one_sec_count,one_sec_max_min,one_sec_sum]
+        else:
+            tmp_stats += [0,0,0]
+    tmp_stats +=  counter_ip      
+    tmp_stats += protocol_count
+    return tmp_stats
+
+
+def single_main(file_name, start_time,total_trial, gap, wht_ip, blk_ip, wn_port, wn_protocol):
+    total_list = []
+    for i in range(total_trial):
+        first_time = start_time + timedelta(seconds = gap*i)
+        grep_date = date_for_find(first_time, gap)
+        sub_tmp_list = []
+        for subset in grep_date:
+            grep_cmd = "cat {} | grep '{}' | grep '{}' ".format(file_name, subset, host_ip)
+            try:
+                sub_tmp = subprocess.Popen(grep_cmd, shell=True, stdout=subprocess.PIPE).stdout.read().decode().split("\n")[:-1]
+                sub_tmp_list += [i.split("\t") for i in sub_tmp]
+            except:
+                pass
+        stats_tmp = extract_one_second_statistics(sub_tmp_list, host_ip,wht_ip, blk_ip, wn_port, wn_protocol)
+        total_list.append([grep_date[0]]+stats_tmp)
+    return total_list
+
+def list_split(int_trial, split):
+    l = range(int_trial)
+    n = math.ceil(int_trial/split)
+    # return => [range(0, 25), range(25, 50), range(50, 75), range(75, 100)]
+    return [l[i:i+n] for i in range(0, len(l), n)]
+
+def multi_main(file_name, start_time, total_trial_list, gap, wht_ip, blk_ip, wn_port, wn_protocol, L):
+    total_list = []
+    for i in total_trial_list:
+        first_time = start_time + timedelta(seconds = gap*i)
+        grep_date = date_for_find(first_time, gap)
+        sub_tmp_list = []
+        for subset in grep_date:
+            grep_cmd = "cat {} | grep '{}' | grep '{}' ".format(file_name, subset, host_ip)
+            try:
+                sub_tmp = subprocess.Popen(grep_cmd, stdout=subprocess.PIPE,shell=True).stdout.read().decode().split("\n")[:-1]
+                sub_tmp_list += [i.split("\t") for i in sub_tmp]
+            except:
+                pass
+        stats_tmp = extract_one_second_statistics(sub_tmp_list, host_ip, wht_ip, blk_ip, wn_port, wn_protocol)
+        L.append([i,grep_date[0]]+stats_tmp)
+    return total_list
+
+def write_file(protocol_list,result,output_name, multi=False):
+    print(output_name) # This is for second job.. Don't Remove.
+    with open(output_name, "w") as f:
+        if multi==True:
+            f.write("seq_number\t")
+        f.write("\t".join(['time','outbound(count)','outbound(max-min)','outbound(sum)','inbound(count)','inbound(max-min)','inbound(sum)','unknown(count)','unknown(max-min)','unknown(sum)','wht_src_ip','blk_src_ip','wht_dst_ip','blk_dst_ip']+protocol_list+['ukn_protocol','\n']))
+        for i in result:
+            for j in i:
+                f.write(str(j))
+                f.write("\t")
+            f.write("\n")
+        
+def get_output_file_path(host_ip, file_name, resampling_second):
+    root_path = '/home/pi/packet_convert/convert_to_tsv/prepros_finish/'
+    file_name = host_ip+","+str(resampling_second)+","+file_name.split("/")[-1]
+    output_file_name = os.path.join(root_path, file_name)
+    return output_file_name
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--n_jobs", help="number of process",type=int, required=True)
-    parser.add_argument("--host_ip", help="host ip path", type=str, required=True)
-    args = parser.parse_args()
+    parser.add_argument('--file_name',help='file path',required=True)
+    parser.add_argument('--host_ip',required=True, type=str)
+    parser.add_argument('--resampling_seconds',required=True, type=int)
+    parser.add_argument('--multi', required=True, type=str)
     
+    args = parser.parse_args()
+    file_name = args.file_name
+    host_ip = args.host_ip
+    resampling_second = args.resampling_seconds
+    multi = args.multi
 
-    mac_dhcp_dict = mac_dhcp_read()
-    print("인식된 맥 주소 : ",mac_dhcp_dict)
-    root_folder = '/home/pi/packet_convert'
-    host_ips = subprocess.Popen("cat {}/bin/{}".format(root_folder,args.host_ip),stdout=subprocess.PIPE,shell=True).stdout.read().decode().split("\n")[:-1]
-    for i in host_ips:
-        try: 
-            mac_name = mac_dhcp_dict[i]
-            if os.path.isdir("{}/convert_to_tsv/prepros_finish/{}".format(root_folder,mac_name)):
-                pass
-            else:
-                os.mkdir("{}/convert_to_tsv/prepros_finish/{}".format(root_folder,mac_name))
-        except:
-            host_ips.remove(i)
-            print("IP({})에 대한 mac정보가 존재하지 않아 Resampling에서 제외됩니다.".format(i))
+    output_file_name = get_output_file_path(host_ip, file_name, resampling_second)
 
-    killer = GracefulKiller()
-    while not killer.kill_now:
-        time.sleep(0.2)
-        try:
-            file_list = last_file()[:args.n_jobs]
-        except:
-            file_list = last_file()
-        if len(file_list)>0:
-            print("현재 작업 파일 리스트 : {}".format(file_list),flush=True)
-            procs = []
-            for i, _file in enumerate(file_list):
-                file_path = '/home/pi/packet_convert/convert_to_tsv/tsv_finish/'+_file
-                print("WORKER({}) : {}".format(i, _file),flush=True)
-                proc = Process(target = make_tsv, args=(i, file_path, host_ips, mac_dhcp_dict))
-                procs.append(proc)
-                proc.start()
-            for proc in procs:
-                proc.join()
-            
-    print("프로세스가 종료됩니다.")
-   
+    try:
+        known_protocol = ['SSDP','MDNS','STP','DHCP','ICMP','LSD','BROWSER','RTSP','DHCPv6','IGMPv2','TLSv1.2',
+                          'ARP','NBNS','SSH','ICMPv6','CDP','UDP','TCP','LLMNR','DB-LSP-DISC','LLDP']
+        start_time, _, total_trial = extract_first_end_time(file_name, int(resampling_second))
+        if multi == 'multi':
+            start_time, _, total_trial = extract_first_end_time(file_name, resampling_second)
+            with Manager() as manager:
+                L = manager.list()
+                process_list = []
+                splited_timeranges = list_split(total_trial,4)
+                for each_timerange in splited_timeranges:
+                    p = Process(target=multi_main, args=(file_name, start_time, each_timerange, resampling_second, [],[],[], known_protocol, L))
+                    process_list.append(p)
+                    p.start()
+                for proc in process_list:
+                    proc.join()
+               
+                write_file(known_protocol, list(L), output_file_name, multi=True)
+        else:
+            output = single_main(file_name, start_time ,total_trial, resampling_second , [],[],[], known_protocol)
+            write_file(known_protocol,output,output_file_name)
+    except:
+        pass
+        #traceback.print_exc()
+

@@ -4,7 +4,6 @@ from multiprocessing import Process
 import time
 import signal
 
-
 def last_file():
     packet_dir = '/home/pi/packet_convert'
     file_list_time = subprocess.Popen("ls {}/raw_pcap/ -Art".format(packet_dir), stdout=subprocess.PIPE,shell=True).stdout.read()
@@ -16,10 +15,10 @@ def last_file():
 
 def make_tsv(file_name):
     time.sleep(3)
-    program_path = "python3 /home/pi/packet_convert/src/pcap_to_tsv.py"
-    root_dir = '/home/pi/packet_convert'
+    program_path = "python3 /home/pi/packet_convert/bin/pcap_to_tsv.py"
+    root_dir = "/home/pi/packet_convert"
     st_time = time.time()
-    status = subprocess.Popen("{} --pcap {}/raw_pcap/{}".format(program_path,root_dir,file_name),stdout=subprocess.PIPE ,shell=True).stdout.read()
+    status = subprocess.Popen("{} --pcap {}/raw_pcap/{}".format(program_path, root_dir, file_name),stdout=subprocess.PIPE ,shell=True).stdout.read()
     move1 = subprocess.Popen("sudo mv {}/raw_pcap/{} {}/convert_to_tsv/original/original_packet/".format(root_dir,file_name, root_dir),stdout=subprocess.PIPE,shell=True).stdout.read()
     move2 = subprocess.Popen("sudo mv {}/raw_pcap/{}_5tuple.tsv {}/convert_to_tsv/tsv_finish".format(root_dir,file_name[:-5], root_dir),stdout=subprocess.PIPE , shell=True).stdout.read()
     
@@ -35,9 +34,6 @@ class GracefulKiller:
     def exit_gracefully(self, signum, frame):
         print("현재 작업 이후 프로세스가 종료됩니다",flush=True)
         self.kill_now = True
-
-
-
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
