@@ -177,7 +177,7 @@ if __name__ == "__main__":
             with Manager() as manager:
                 L = manager.list()
                 process_list = []
-                splited_timeranges = list_split(total_trial,4)
+                splited_timeranges = list_split(total_trial,1)
                 for each_timerange in splited_timeranges:
                     p = Process(target=multi_main, args=(file_name, start_time, each_timerange, resampling_second, [],[],[], known_protocol, L))
                     process_list.append(p)

@@ -96,7 +96,7 @@ if __name__ == "__main__":
     print("인식된 맥 주소 : ",mac_dhcp_dict)
     host_ips = read_host_ips(args.host_ip)['host_ips']
     host_ips = add_path_rm_hosts(host_ips)
-
+    print("host ip 목록 :",host_ips)
     killer = GracefulKiller()
     while not killer.kill_now:
         time.sleep(0.2)

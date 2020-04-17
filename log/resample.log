@@ -1,69 +1,63 @@
 인식된 맥 주소 :  {'10.203.23.12': '94:76:b7:69:d8:8b', '192.168.203.229': 'SMU_device'}
-IP(10.203.23.98)에 대한 mac정보가 존재하지 않아 Resampling에서 제외됩니다.
 IP(10.203.23.117)에 대한 mac정보가 존재하지 않아 Resampling에서 제외됩니다.
-현재 작업 파일 리스트 : ['trace_2020-04-16_10:34:53_5tuple.tsv']
-WORKER(0) : trace_2020-04-16_10:34:53_5tuple.tsv
+host ip 목록 : ['192.168.203.229', '10.203.23.12']
+현재 작업 파일 리스트 : ['trace_2020-04-17_08:54:25_5tuple.tsv', 'trace_2020-04-17_08:54:20_5tuple.tsv', 'trace_2020-04-17_08:54:15_5tuple.tsv', 'trace_2020-04-17_08:54:10_5tuple.tsv']
+WORKER(0) : trace_2020-04-17_08:54:25_5tuple.tsv
+WORKER(1) : trace_2020-04-17_08:54:20_5tuple.tsv
 WORKER(0) : (START) IP : 192.168.203.229 
-WORKER(0) : (SAVED) MAC:192.168.203.229, IP:SMU_device, FILE:SMU_device,1,trace_2020-04-16_10:34:53_5tuple.tsv, Time:3.352s 
-WORKER(0) : (START) IP : 10.203.23.89 
-WORKER(0) : (ERROR) 10.203.23.89의 맥정보가 존재하지 않습니다.
-WORKER(0) : (COMPLETE) /home/pi/packet_convert/convert_to_tsv/tsv_finish/trace_2020-04-16_10:34:53_5tuple.tsv 
+WORKER(2) : trace_2020-04-17_08:54:15_5tuple.tsv
+WORKER(3) : trace_2020-04-17_08:54:10_5tuple.tsv
+WORKER(1) : (START) IP : 192.168.203.229 
+WORKER(2) : (START) IP : 192.168.203.229 
+WORKER(3) : (START) IP : 192.168.203.229 
+WORKER(0) : (SAVED) MAC:192.168.203.229, IP:SMU_device, FILE:SMU_device,1,trace_2020-04-17_08:54:25_5tuple.tsv, Time:5.994s 
+WORKER(0) : (START) IP : 10.203.23.12 
+WORKER(2) : (SAVED) MAC:192.168.203.229, IP:SMU_device, FILE:SMU_device,1,trace_2020-04-17_08:54:15_5tuple.tsv, Time:5.994s 
+WORKER(2) : (START) IP : 10.203.23.12 
+WORKER(1) : (SAVED) MAC:192.168.203.229, IP:SMU_device, FILE:SMU_device,1,trace_2020-04-17_08:54:20_5tuple.tsv, Time:6.083s 
+WORKER(1) : (START) IP : 10.203.23.12 
+WORKER(3) : (SAVED) MAC:192.168.203.229, IP:SMU_device, FILE:SMU_device,1,trace_2020-04-17_08:54:10_5tuple.tsv, Time:6.690s 
+WORKER(3) : (START) IP : 10.203.23.12 
+WORKER(2) : (SAVED) MAC:10.203.23.12, IP:94:76:b7:69:d8:8b, FILE:94:76:b7:69:d8:8b,1,trace_2020-04-17_08:54:15_5tuple.tsv, Time:6.571s 
+WORKER(2) : (COMPLETE) /home/pi/packet_convert/convert_to_tsv/tsv_finish/trace_2020-04-17_08:54:15_5tuple.tsv 
 --------------------
-현재 작업 파일 리스트 : ['trace_2020-04-16_10:34:58_5tuple.tsv']
-WORKER(0) : trace_2020-04-16_10:34:58_5tuple.tsv
-WORKER(0) : (START) IP : 192.168.203.229 
-WORKER(0) : (SAVED) MAC:192.168.203.229, IP:SMU_device, FILE:SMU_device,1,trace_2020-04-16_10:34:58_5tuple.tsv, Time:3.060s 
-WORKER(0) : (START) IP : 10.203.23.89 
-WORKER(0) : (ERROR) 10.203.23.89의 맥정보가 존재하지 않습니다.
-WORKER(0) : (COMPLETE) /home/pi/packet_convert/convert_to_tsv/tsv_finish/trace_2020-04-16_10:34:58_5tuple.tsv 
+WORKER(1) : (SAVED) MAC:10.203.23.12, IP:94:76:b7:69:d8:8b, FILE:94:76:b7:69:d8:8b,1,trace_2020-04-17_08:54:20_5tuple.tsv, Time:6.505s 
+WORKER(1) : (COMPLETE) /home/pi/packet_convert/convert_to_tsv/tsv_finish/trace_2020-04-17_08:54:20_5tuple.tsv 
 --------------------
-현재 작업 파일 리스트 : ['trace_2020-04-16_11:39:01_5tuple.tsv']
-WORKER(0) : trace_2020-04-16_11:39:01_5tuple.tsv
-WORKER(0) : (START) IP : 192.168.203.229 
-WORKER(0) : (SAVED) MAC:192.168.203.229, IP:SMU_device, FILE:SMU_device,1,trace_2020-04-16_11:39:01_5tuple.tsv, Time:3.364s 
-WORKER(0) : (START) IP : 10.203.23.89 
-WORKER(0) : (ERROR) 10.203.23.89의 맥정보가 존재하지 않습니다.
-WORKER(0) : (COMPLETE) /home/pi/packet_convert/convert_to_tsv/tsv_finish/trace_2020-04-16_11:39:01_5tuple.tsv 
+WORKER(3) : (SAVED) MAC:10.203.23.12, IP:94:76:b7:69:d8:8b, FILE:94:76:b7:69:d8:8b,1,trace_2020-04-17_08:54:10_5tuple.tsv, Time:5.946s 
+WORKER(3) : (COMPLETE) /home/pi/packet_convert/convert_to_tsv/tsv_finish/trace_2020-04-17_08:54:10_5tuple.tsv 
 --------------------
-현재 작업 파일 리스트 : ['trace_2020-04-16_11:39:06_5tuple.tsv']
-WORKER(0) : trace_2020-04-16_11:39:06_5tuple.tsv
-WORKER(0) : (START) IP : 192.168.203.229 
-WORKER(0) : (SAVED) MAC:192.168.203.229, IP:SMU_device, FILE:SMU_device,1,trace_2020-04-16_11:39:06_5tuple.tsv, Time:3.083s 
-WORKER(0) : (START) IP : 10.203.23.89 
-WORKER(0) : (ERROR) 10.203.23.89의 맥정보가 존재하지 않습니다.
-WORKER(0) : (COMPLETE) /home/pi/packet_convert/convert_to_tsv/tsv_finish/trace_2020-04-16_11:39:06_5tuple.tsv 
+WORKER(0) : (SAVED) MAC:10.203.23.12, IP:94:76:b7:69:d8:8b, FILE:94:76:b7:69:d8:8b,1,trace_2020-04-17_08:54:25_5tuple.tsv, Time:6.747s 
+WORKER(0) : (COMPLETE) /home/pi/packet_convert/convert_to_tsv/tsv_finish/trace_2020-04-17_08:54:25_5tuple.tsv 
 --------------------
-현재 작업 파일 리스트 : ['trace_2020-04-16_11:39:11_5tuple.tsv']
-WORKER(0) : trace_2020-04-16_11:39:11_5tuple.tsv
+현재 작업 파일 리스트 : ['trace_2020-04-17_08:54:46_5tuple.tsv', 'trace_2020-04-17_08:54:41_5tuple.tsv', 'trace_2020-04-17_08:54:36_5tuple.tsv', 'trace_2020-04-17_08:54:30_5tuple.tsv']
+WORKER(0) : trace_2020-04-17_08:54:46_5tuple.tsv
+WORKER(1) : trace_2020-04-17_08:54:41_5tuple.tsv
 WORKER(0) : (START) IP : 192.168.203.229 
-WORKER(0) : (SAVED) MAC:192.168.203.229, IP:SMU_device, FILE:SMU_device,1,trace_2020-04-16_11:39:11_5tuple.tsv, Time:3.063s 
-WORKER(0) : (START) IP : 10.203.23.89 
-WORKER(0) : (ERROR) 10.203.23.89의 맥정보가 존재하지 않습니다.
-WORKER(0) : (COMPLETE) /home/pi/packet_convert/convert_to_tsv/tsv_finish/trace_2020-04-16_11:39:11_5tuple.tsv 
---------------------
-현재 작업 파일 리스트 : ['trace_2020-04-16_11:39:16_5tuple.tsv']
-WORKER(0) : trace_2020-04-16_11:39:16_5tuple.tsv
-WORKER(0) : (START) IP : 192.168.203.229 
-WORKER(0) : (SAVED) MAC:192.168.203.229, IP:SMU_device, FILE:SMU_device,1,trace_2020-04-16_11:39:16_5tuple.tsv, Time:3.167s 
-WORKER(0) : (START) IP : 10.203.23.89 
-WORKER(0) : (ERROR) 10.203.23.89의 맥정보가 존재하지 않습니다.
-WORKER(0) : (COMPLETE) /home/pi/packet_convert/convert_to_tsv/tsv_finish/trace_2020-04-16_11:39:16_5tuple.tsv 
---------------------
-현재 작업 파일 리스트 : ['trace_2020-04-16_11:39:22_5tuple.tsv']
-WORKER(0) : trace_2020-04-16_11:39:22_5tuple.tsv
-WORKER(0) : (START) IP : 192.168.203.229 
-WORKER(0) : (SAVED) MAC:192.168.203.229, IP:SMU_device, FILE:SMU_device,1,trace_2020-04-16_11:39:22_5tuple.tsv, Time:3.185s 
-WORKER(0) : (START) IP : 10.203.23.89 
-WORKER(0) : (ERROR) 10.203.23.89의 맥정보가 존재하지 않습니다.
-WORKER(0) : (COMPLETE) /home/pi/packet_convert/convert_to_tsv/tsv_finish/trace_2020-04-16_11:39:22_5tuple.tsv 
---------------------
-현재 작업 파일 리스트 : ['trace_2020-04-16_11:39:32_5tuple.tsv']
-WORKER(0) : trace_2020-04-16_11:39:32_5tuple.tsv
-WORKER(0) : (START) IP : 192.168.203.229 
+WORKER(2) : trace_2020-04-17_08:54:36_5tuple.tsv
+WORKER(3) : trace_2020-04-17_08:54:30_5tuple.tsv
+WORKER(1) : (START) IP : 192.168.203.229 
+WORKER(2) : (START) IP : 192.168.203.229 
+WORKER(3) : (START) IP : 192.168.203.229 
+WORKER(2) : (SAVED) MAC:192.168.203.229, IP:SMU_device, FILE:SMU_device,1,trace_2020-04-17_08:54:36_5tuple.tsv, Time:7.381s 
+WORKER(2) : (START) IP : 10.203.23.12 
+WORKER(1) : (SAVED) MAC:192.168.203.229, IP:SMU_device, FILE:SMU_device,1,trace_2020-04-17_08:54:41_5tuple.tsv, Time:7.538s 
+WORKER(1) : (START) IP : 10.203.23.12 
+WORKER(0) : (SAVED) MAC:192.168.203.229, IP:SMU_device, FILE:SMU_device,1,trace_2020-04-17_08:54:46_5tuple.tsv, Time:7.793s 
+WORKER(0) : (START) IP : 10.203.23.12 
+WORKER(3) : (SAVED) MAC:192.168.203.229, IP:SMU_device, FILE:SMU_device,1,trace_2020-04-17_08:54:30_5tuple.tsv, Time:7.839s 
+WORKER(3) : (START) IP : 10.203.23.12 
 현재작업 이후 프로세스가 종료 됩니다.
-WORKER(0) : (SAVED) MAC:192.168.203.229, IP:SMU_device, FILE:SMU_device,1,trace_2020-04-16_11:39:32_5tuple.tsv, Time:3.141s 
-WORKER(0) : (START) IP : 10.203.23.89 
-WORKER(0) : (ERROR) 10.203.23.89의 맥정보가 존재하지 않습니다.
-WORKER(0) : (COMPLETE) /home/pi/packet_convert/convert_to_tsv/tsv_finish/trace_2020-04-16_11:39:32_5tuple.tsv 
+WORKER(2) : (SAVED) MAC:10.203.23.12, IP:94:76:b7:69:d8:8b, FILE:94:76:b7:69:d8:8b,1,trace_2020-04-17_08:54:36_5tuple.tsv, Time:6.185s 
+WORKER(2) : (COMPLETE) /home/pi/packet_convert/convert_to_tsv/tsv_finish/trace_2020-04-17_08:54:36_5tuple.tsv 
+--------------------
+WORKER(1) : (SAVED) MAC:10.203.23.12, IP:94:76:b7:69:d8:8b, FILE:94:76:b7:69:d8:8b,1,trace_2020-04-17_08:54:41_5tuple.tsv, Time:6.496s 
+WORKER(1) : (COMPLETE) /home/pi/packet_convert/convert_to_tsv/tsv_finish/trace_2020-04-17_08:54:41_5tuple.tsv 
+--------------------
+WORKER(3) : (SAVED) MAC:10.203.23.12, IP:94:76:b7:69:d8:8b, FILE:94:76:b7:69:d8:8b,1,trace_2020-04-17_08:54:30_5tuple.tsv, Time:6.377s 
+WORKER(3) : (COMPLETE) /home/pi/packet_convert/convert_to_tsv/tsv_finish/trace_2020-04-17_08:54:30_5tuple.tsv 
+--------------------
+WORKER(0) : (SAVED) MAC:10.203.23.12, IP:94:76:b7:69:d8:8b, FILE:94:76:b7:69:d8:8b,1,trace_2020-04-17_08:54:46_5tuple.tsv, Time:7.243s 
+WORKER(0) : (COMPLETE) /home/pi/packet_convert/convert_to_tsv/tsv_finish/trace_2020-04-17_08:54:46_5tuple.tsv 
 --------------------
 프로세스가 종료됩니다.

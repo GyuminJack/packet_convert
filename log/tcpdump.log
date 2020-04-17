@@ -1,5 +1,5 @@
 dropped privs to root
 tcpdump: listening on any, link-type LINUX_SLL (Linux cooked), capture size 262144 bytes
-3605 packets captured
-3808 packets received by filter
+2002 packets captured
+2243 packets received by filter
 0 packets dropped by kernel

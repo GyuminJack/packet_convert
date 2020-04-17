@@ -1,25 +1,29 @@
 Pcap을 Tsv로 변환합니다.
-현재 작업 파일 리스트 : ['trace_2020-04-16_10:34:58.pcap', 'trace_2020-04-16_11:39:01.pcap']
-서브 프로세스 : trace_2020-04-16_10:34:58.pcap
-서브 프로세스 : trace_2020-04-16_11:39:01.pcap
-(TSV_CONVERT) FILE:trace_2020-04-16_10:34:58.pcap, Time:2.136s
-(TSV_CONVERT) FILE:trace_2020-04-16_11:39:01.pcap, Time:2.786s
-현재 작업 파일 리스트 : ['trace_2020-04-16_11:39:06.pcap']
-서브 프로세스 : trace_2020-04-16_11:39:06.pcap
-(TSV_CONVERT) FILE:trace_2020-04-16_11:39:06.pcap, Time:2.835s
-현재 작업 파일 리스트 : ['trace_2020-04-16_11:39:11.pcap']
-서브 프로세스 : trace_2020-04-16_11:39:11.pcap
-(TSV_CONVERT) FILE:trace_2020-04-16_11:39:11.pcap, Time:2.527s
-현재 작업 파일 리스트 : ['trace_2020-04-16_11:39:16.pcap']
-서브 프로세스 : trace_2020-04-16_11:39:16.pcap
-(TSV_CONVERT) FILE:trace_2020-04-16_11:39:16.pcap, Time:2.468s
-현재 작업 파일 리스트 : ['trace_2020-04-16_11:39:22.pcap']
-서브 프로세스 : trace_2020-04-16_11:39:22.pcap
-(TSV_CONVERT) FILE:trace_2020-04-16_11:39:22.pcap, Time:2.518s
-현재 작업 파일 리스트 : ['trace_2020-04-16_11:39:32.pcap', 'trace_2020-04-16_11:39:27.pcap']
-서브 프로세스 : trace_2020-04-16_11:39:32.pcap
-서브 프로세스 : trace_2020-04-16_11:39:27.pcap
-tshark: The file "/home/pi/packet_convert/raw_pcap/trace_2020-04-16_11:39:32.pcap" appears to have been cut short in the middle of a packet.
-(TSV_CONVERT) FILE:trace_2020-04-16_11:39:32.pcap, Time:3.008s
+현재 작업 파일 리스트 : ['trace_2020-04-17_08:54:30.pcap', 'trace_2020-04-17_08:54:36.pcap', 'trace_2020-04-17_08:54:41.pcap', 'trace_2020-04-17_08:54:46.pcap']
+서브 프로세스 : trace_2020-04-17_08:54:30.pcap
+서브 프로세스 : trace_2020-04-17_08:54:36.pcap
+서브 프로세스 : trace_2020-04-17_08:54:41.pcap
+서브 프로세스 : trace_2020-04-17_08:54:46.pcap
+(TSV_CONVERT) FILE:trace_2020-04-17_08:54:46.pcap, Time:6.058s
+(TSV_CONVERT) FILE:trace_2020-04-17_08:54:30.pcap, Time:6.550s
+(TSV_CONVERT) FILE:trace_2020-04-17_08:54:41.pcap, Time:6.559s
+(TSV_CONVERT) FILE:trace_2020-04-17_08:54:36.pcap, Time:7.186s
+현재 작업 파일 리스트 : ['trace_2020-04-17_08:54:51.pcap', 'trace_2020-04-17_08:54:56.pcap', 'trace_2020-04-17_08:55:02.pcap', 'trace_2020-04-17_08:55:07.pcap']
+서브 프로세스 : trace_2020-04-17_08:54:51.pcap
+서브 프로세스 : trace_2020-04-17_08:54:56.pcap
+서브 프로세스 : trace_2020-04-17_08:55:02.pcap
+서브 프로세스 : trace_2020-04-17_08:55:07.pcap
+(TSV_CONVERT) FILE:trace_2020-04-17_08:55:07.pcap, Time:5.245s
+(TSV_CONVERT) FILE:trace_2020-04-17_08:55:02.pcap, Time:5.267s
+(TSV_CONVERT) FILE:trace_2020-04-17_08:54:56.pcap, Time:5.829s
+(TSV_CONVERT) FILE:trace_2020-04-17_08:54:51.pcap, Time:6.219s
+현재 작업 파일 리스트 : ['trace_2020-04-17_08:55:12.pcap', 'trace_2020-04-17_08:55:17.pcap', 'trace_2020-04-17_08:55:22.pcap', 'trace_2020-04-17_08:55:28.pcap']
+서브 프로세스 : trace_2020-04-17_08:55:12.pcap
+서브 프로세스 : trace_2020-04-17_08:55:17.pcap
+서브 프로세스 : trace_2020-04-17_08:55:22.pcap
+서브 프로세스 : trace_2020-04-17_08:55:28.pcap
 현재 작업 이후 프로세스가 종료됩니다
-(TSV_CONVERT) FILE:trace_2020-04-16_11:39:27.pcap, Time:3.402s
+(TSV_CONVERT) FILE:trace_2020-04-17_08:55:22.pcap, Time:4.625s
+(TSV_CONVERT) FILE:trace_2020-04-17_08:55:28.pcap, Time:4.853s
+(TSV_CONVERT) FILE:trace_2020-04-17_08:55:12.pcap, Time:4.919s
+(TSV_CONVERT) FILE:trace_2020-04-17_08:55:17.pcap, Time:4.983s
