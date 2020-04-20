@@ -14,6 +14,10 @@ def last_file():
         sorted_files = file_list_time.decode().split("\n")[:-1]
     return sorted_files
 
+def path_check_make(create_path):
+    if not os.path.isdir(create_path):
+        os.makedirs(create_path)
+
 def make_tsv(worker_id, file_name, host_ip, mac_dhcp_dict):
     program_path = "python3 /home/pi/packet_convert/bin/prepros_tsv.py"
     
@@ -28,15 +32,17 @@ def make_tsv(worker_id, file_name, host_ip, mac_dhcp_dict):
             if len(outname) > 5:
                 original_file = outname
                 root_path = '/home/pi/packet_convert/convert_to_tsv'
-                date_path = datetime.datetime.now().strftime("%Y-%m-%d")
+                date_path = outname.split("/")[-1].split(",")[2].split("_")[1]
                 rename = "{},{}".format(each_mac,",".join(outname.split("/")[-1].split(",")[1:]))
                 move_path = os.path.join(root_path, "prepros_finish", each_mac, date_path, rename)
+                path_check_make(os.path.join(root_path, "prepros_finish", each_mac, date_path))
                 mv_to_prepros_finish = subprocess.Popen("sudo mv {} {}".format(original_file, move_path), stdout=subprocess.PIPE,shell=True)
-                print("WORKER({}) : (SAVED) MAC:{}, IP:{}, FILE:{}, Time:{:.3f}s ".format(worker_id, i, each_mac, rename, time.time()-st_time),flush=True)
+                print("WORKER({}) : (SAVED) MAC:{}, IP:{}, FILE:{}, Time:{:.3f}s ".format(worker_id, each_mac, i, rename, time.time()-st_time),flush=True)
             else:
                 print("WORKER({}) : (NODATA) cmd : {}".format(worker_id, cmd)) 
         except:
             print("WORKER({}) : (ERROR) {}의 맥정보가 존재하지 않습니다.".format(worker_id,i))
+            continue
     to_original_path = os.path.join(root_path, "original","original_tsv/")
     mv_to_original_path = subprocess.Popen("sudo mv {} {}".format(file_name, to_original_path), stdout=subprocess.PIPE,shell=True)
     print("WORKER({}) : (COMPLETE) {} ".format(worker_id, file_name),flush=True)
@@ -64,17 +70,12 @@ class GracefulKiller:
         print("현재작업 이후 프로세스가 종료 됩니다.",flush=True)
         self.kill_now = True
 
-def add_path_rm_hosts(host_ips):
+def rm_hosts(host_ips):
     global mac_dhcp_dict
     root_folder = '/home/pi/packet_convert'
-    date_path = datetime.datetime.now().strftime("%Y-%m-%d")
     for i in host_ips:
         try:
-            print(i)
-            mac_name = mac_dhcp_dict[i]
-            create_path = os.path.join(root_folder, "convert_to_tsv", "prepros_finish", mac_name, date_path)
-            if not os.path.isdir(create_path):
-                os.makedirs(create_path)
+            mac_dhcp_dict[i]
         except:
             host_ips.remove(i)
             print("IP({})에 대한 mac정보가 존재하지 않아 Resampling에서 제외됩니다.".format(i))
@@ -97,7 +98,7 @@ if __name__ == "__main__":
     mac_dhcp_dict = mac_dhcp_read()
     print("인식된 맥 주소 : ",mac_dhcp_dict)
     host_ips = read_host_ips(args.host_ip)['host_ips']
-    host_ips = add_path_rm_hosts(host_ips)
+    host_ips = rm_hosts(host_ips)
     print("host ip 목록 :",host_ips)
     killer = GracefulKiller()
     while not killer.kill_now:
