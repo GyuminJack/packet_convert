@@ -107,7 +107,7 @@ def single_main(file_name, start_time,total_trial, gap, wht_ip, blk_ip, wn_port,
                 sub_tmp = subprocess.Popen(grep_cmd, shell=True, stdout=subprocess.PIPE).stdout.read().decode().split("\n")[:-1]
                 sub_tmp_list += [i.split("\t") for i in sub_tmp]
             except:
-                continue
+                pass
         stats_tmp = extract_one_second_statistics(sub_tmp_list, host_ip,wht_ip, blk_ip, wn_port, wn_protocol)
         total_list.append([grep_date[0]]+stats_tmp)
     return total_list
@@ -130,7 +130,7 @@ def multi_main(file_name, start_time, total_trial_list, gap, wht_ip, blk_ip, wn_
                 sub_tmp = subprocess.Popen(grep_cmd, stdout=subprocess.PIPE,shell=True).stdout.read().decode().split("\n")[:-1]
                 sub_tmp_list += [i.split("\t") for i in sub_tmp]
             except:
-                continue
+                pass
         stats_tmp = extract_one_second_statistics(sub_tmp_list, host_ip, wht_ip, blk_ip, wn_port, wn_protocol)
         L.append([i,grep_date[0]]+stats_tmp)
     return total_list
@@ -190,6 +190,6 @@ if __name__ == "__main__":
             output = single_main(file_name, start_time ,total_trial, resampling_second , [],[],[], known_protocol)
             write_file(known_protocol,output,output_file_name)
     except:
-        continue
+        pass
         #traceback.print_exc()
 

@@ -20,18 +20,17 @@ def path_check_make(create_path):
 
 def make_tsv(worker_id, file_name, host_ip, mac_dhcp_dict):
     program_path = "python3 /home/pi/packet_convert/bin/prepros_tsv.py"
-    
+    root_path = '/home/pi/packet_convert/convert_to_tsv'
     for i in host_ip:
         st_time = time.time()
         print("WORKER({}) : (START) IP : {} ".format(worker_id, i),flush=True)
-        try:
+        if i in mac_dhcp_dict:
             each_mac = mac_dhcp_dict[i]
             cmd = "{} --file_name {} --host_ip {} --resampling_seconds 1 --multi multi".format(program_path, file_name, i)
             outname = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True).stdout.read().decode().replace("\n","")
 
             if len(outname) > 5:
                 original_file = outname
-                root_path = '/home/pi/packet_convert/convert_to_tsv'
                 date_path = outname.split("/")[-1].split(",")[2].split("_")[1]
                 rename = "{},{}".format(each_mac,",".join(outname.split("/")[-1].split(",")[1:]))
                 move_path = os.path.join(root_path, "prepros_finish", each_mac, date_path, rename)
@@ -40,10 +39,10 @@ def make_tsv(worker_id, file_name, host_ip, mac_dhcp_dict):
                 print("WORKER({}) : (SAVED) MAC:{}, IP:{}, FILE:{}, Time:{:.3f}s ".format(worker_id, each_mac, i, rename, time.time()-st_time),flush=True)
             else:
                 print("WORKER({}) : (NODATA) cmd : {}".format(worker_id, cmd)) 
-        except:
+        else:
             print("WORKER({}) : (ERROR) {}의 맥정보가 존재하지 않습니다.".format(worker_id,i))
-            continue
-    to_original_path = os.path.join(root_path, "original","original_tsv/")
+            
+    to_original_path = os.path.join(root_path, "original", "original_tsv/")
     mv_to_original_path = subprocess.Popen("sudo mv {} {}".format(file_name, to_original_path), stdout=subprocess.PIPE,shell=True)
     print("WORKER({}) : (COMPLETE) {} ".format(worker_id, file_name),flush=True)
     print("-"*20)
@@ -74,9 +73,7 @@ def rm_hosts(host_ips):
     global mac_dhcp_dict
     root_folder = '/home/pi/packet_convert'
     for i in host_ips:
-        try:
-            mac_dhcp_dict[i]
-        except:
+        if i not in mac_dhcp_dict:
             host_ips.remove(i)
             print("IP({})에 대한 mac정보가 존재하지 않아 Resampling에서 제외됩니다.".format(i))
             continue
