@@ -69,7 +69,8 @@ def add_path_rm_hosts(host_ips):
     root_folder = '/home/pi/packet_convert'
     date_path = datetime.datetime.now().strftime("%Y-%m-%d")
     for i in host_ips:
-        try: 
+        try:
+            print(i)
             mac_name = mac_dhcp_dict[i]
             create_path = os.path.join(root_folder, "convert_to_tsv", "prepros_finish", mac_name, date_path)
             if not os.path.isdir(create_path):
@@ -77,6 +78,7 @@ def add_path_rm_hosts(host_ips):
         except:
             host_ips.remove(i)
             print("IP({})에 대한 mac정보가 존재하지 않아 Resampling에서 제외됩니다.".format(i))
+            continue
     return host_ips
 
 def read_host_ips(host_ip_path):

@@ -4,11 +4,12 @@ import glob
 import os
 import subprocess
 
-device_names = glob.glob("*")
-device_names.remove("mover.py")
+device_names = glob.glob("*/")
+device_names = [i.replace("/","") for i in device_names]
 print(device_names)
 i = 2
 device_name = device_names[i]
+print(device_name)
 files = glob.glob(os.path.join(device_name,"*.tsv"))
 for file_name in files:
     if "_" in device_name:
