@@ -6,7 +6,7 @@ import time
 import os
 import signal
 import yaml
-
+import threading
 def last_file():
     file_list_time = subprocess.Popen("ls /home/pi/packet_convert/convert_to_tsv/tsv_finish -r",stdout=subprocess.PIPE , shell=True).stdout.read()
     sorted_files = []
@@ -84,6 +84,20 @@ def read_host_ips(host_ip_path):
     with open(host_ip_path, "r") as f:
         host_ips = yaml.load(f, Loader = yaml.FullLoader)
     return host_ips
+    
+
+class grep_hosts:
+    def __init__(self, host_ip_path):
+        self.path = host_ip_path
+    def get_host_ips(self):
+        global mac_dhcp_dict
+        mac_dhcp_dict = mac_dhcp_read()
+        self.host_ips = rm_hosts(read_host_ips(args.host_ip)['host_ips'])
+        self.timer = threading.Timer(120, self.get_host_ips)
+        self.timer.start()
+        return self.host_ips 
+    def stop(self):
+        self.timer.cancel()
 
 
 if __name__ == "__main__":
@@ -95,11 +109,13 @@ if __name__ == "__main__":
     
     mac_dhcp_dict = mac_dhcp_read()
     print("인식된 맥 주소 : ",mac_dhcp_dict)
-    host_ips = read_host_ips(args.host_ip)['host_ips']
-    host_ips = rm_hosts(host_ips)
+    grepper = grep_hosts(args.host_ip)
+    host_ips = grepper.get_host_ips()
     print("host ip 목록 :",host_ips)
     killer = GracefulKiller()
     while not killer.kill_now:
+        if set(grepper.host_ips) != set(host_ips):
+            host_ips = grepper.host_ips
         time.sleep(0.2)
         try:
             file_list = last_file()[:args.n_jobs]
@@ -116,6 +132,6 @@ if __name__ == "__main__":
                 proc.start()
             for proc in procs:
                 proc.join()
-            
+    grepper.stop()
     print("프로세스가 종료됩니다.")
    
