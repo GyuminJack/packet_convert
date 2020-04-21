@@ -72,12 +72,13 @@ class GracefulKiller:
 def rm_hosts(host_ips):
     global mac_dhcp_dict
     root_folder = '/home/pi/packet_convert'
+    return_list = []
     for i in host_ips:
-        if i not in mac_dhcp_dict:
-            host_ips.remove(i)
-            print("IP({})에 대한 mac정보가 존재하지 않아 Resampling에서 제외됩니다.".format(i))
-            continue
-    return host_ips
+        if i in mac_dhcp_dict:
+            return_list.append(i)
+        else:
+            print("IP({})에 대한 mac정보가 존재하지 않아 Resampling에서 제외됩니다.".format(i)) 
+    return return_list 
 
 def read_host_ips(host_ip_path):
     with open(host_ip_path, "r") as f:
